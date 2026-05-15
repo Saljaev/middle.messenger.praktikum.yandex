@@ -1,0 +1,76 @@
+@use 'sass:color';
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.message-input {
+  display: flex;
+  align-items: center;
+  padding: $spacer-sm $spacer-md;
+  background-color: $bg-primary;
+  border-top: 1px solid $bg-tertiary;
+  gap: $spacer-sm;
+
+  &__attach-btn,
+  &__emoji-btn,
+  &__send-btn {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
+
+    .material-symbols-outlined {
+      font-size: 22px;
+    }
+  }
+
+  &__attach-btn,
+  &__emoji-btn {
+    background: none;
+    color: $gray-600;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $gray-200;
+      color: $gray-900;
+    }
+  }
+
+  &__send-btn {
+    background-color: $primary-color;
+    color: $white;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: color.adjust($primary-color, $lightness: -7.5%);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__field {
+    flex: 1;
+    padding: $spacer-sm $spacer-md;
+    border: none;
+    background-color: $gray-100;
+    border-radius: $border-radius-lg;
+    font-size: $font-size-base;
+    outline: none;
+    max-height: 120px;
+    overflow-y: auto;
+
+    &:focus {
+      background-color: $white;
+    }
+
+    &::placeholder {
+      color: $gray-500;
+    }
+  }
+}

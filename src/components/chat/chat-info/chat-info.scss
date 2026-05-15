@@ -1,0 +1,84 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.chat-info {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: $bg-secondary;
+
+  &__header {
+    height: $header-height;
+    padding: 0 $spacer-md;
+    display: flex;
+    align-items: center;
+    background-color: $bg-primary;
+    border-bottom: 1px solid $bg-tertiary;
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    gap: $spacer-sm;
+    text-decoration: none;
+    color: $gray-700;
+    font-size: $font-size-base;
+    font-weight: 500;
+
+    &:hover {
+      color: $gray-900;
+    }
+  }
+
+  &__profile {
+    @include flex-center;
+    flex-direction: column;
+    padding: $spacer-xl $spacer-md;
+    background-color: $bg-primary;
+    border-bottom: 1px solid $bg-tertiary;
+    gap: $spacer-sm;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: 500;
+    color: $gray-900;
+  }
+
+  &__status {
+    font-size: $font-size-base;
+    color: $gray-500;
+  }
+
+  &__section {
+    padding: $spacer-md;
+  }
+
+  &__section-title {
+    font-size: $font-size-lg;
+    font-weight: 500;
+    color: $gray-900;
+    margin-bottom: $spacer-md;
+  }
+
+  &__members {
+    display: flex;
+    flex-direction: column;
+    gap: $spacer-sm;
+  }
+
+  &__member {
+    display: flex;
+    align-items: center;
+    gap: $spacer-sm;
+    padding: $spacer-sm;
+    background-color: $bg-primary;
+    border-radius: $border-radius;
+  }
+
+  &__member-name {
+    font-size: $font-size-base;
+    color: $gray-900;
+  }
+}

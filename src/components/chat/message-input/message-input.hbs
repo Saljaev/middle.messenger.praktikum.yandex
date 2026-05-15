@@ -1,0 +1,22 @@
+<form class="message-form">
+  <div class="message-input">
+    <button type="button" class="message-input__attach-btn" title="Прикрепить файл">
+      {{> attach-file-icon}}
+    </button>
+
+    <input
+      type="text"
+      class="message-input__field"
+      placeholder="Напишите сообщение..."
+      name="message"
+    >
+
+    <button type="button" class="message-input__emoji-btn" title="Эмодзи">
+      {{> sentiment-satisfied-icon}}
+    </button>
+
+    <button type="submit" class="message-input__send-btn" title="Отправить">
+      {{> send-icon}}
+    </button>
+  </div>
+</form>

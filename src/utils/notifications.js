@@ -1,0 +1,44 @@
+export function showToast(message, type = 'success', duration = 3000) {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast--${type}`;
+    toast.innerHTML = `
+    <div class="toast__content">
+      <span>${message}</span>
+    </div>
+  `;
+
+    container.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+            if (container.children.length === 0) {
+                container.remove();
+            }
+        }, 300);
+    }, duration);
+}
+
+export function showSuccess(message) {
+    showToast(message, 'success');
+}
+
+export function showError(message) {
+    showToast(message, 'error');
+}
+
+export function showWarning(message) {
+    showToast(message, 'warning');
+}

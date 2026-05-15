@@ -1,0 +1,42 @@
+{{#if senderId}}
+  {{#if (eq senderId currentUser.id)}}
+    {{#if senderName}}
+      <div class="message message--outgoing message--group {{#if isRead}}message--read{{/if}}">
+    {{else}}
+      <div class="message message--outgoing {{#if isRead}}message--read{{/if}}">
+    {{/if}}
+  {{else}}
+    {{#if senderName}}
+      <div class="message message--incoming message--group {{#if isRead}}message--read{{/if}}">
+    {{else}}
+      <div class="message message--incoming {{#if isRead}}message--read{{/if}}">
+    {{/if}}
+  {{/if}}
+{{else}}
+  <div class="message message--{{type}} {{#if isRead}}message--read{{/if}}">
+{{/if}}
+  <div class="message__content">
+    {{#if senderName}}
+      <div class="message__sender">
+        {{> avatar url=senderAvatar name=senderName size="tiny"}}
+        <span class="message__sender-name">{{senderName}}</span>
+      </div>
+    {{/if}}
+
+    <div class="message__text">
+      {{text}}
+      <span class="message__meta-inline">
+        <time class="message__time">{{formatTime time 'time'}}</time>
+        {{#if (eq senderId currentUser.id)}}
+          <span class="message__status {{#if isRead}}message__status--read{{/if}}">
+            {{#if isRead}}
+              {{> check-read-icon}}
+            {{else}}
+              {{> check-icon}}
+            {{/if}}
+          </span>
+        {{/if}}
+      </span>
+    </div>
+  </div>
+</div>
