@@ -1,0 +1,29 @@
+<div class="chat-header">
+  <a href="/chat/{{chat.id}}/info" class="chat-header__info">
+    {{> avatar url=chat.avatarUrl name=chat.title size="small"}}
+    <div class="chat-header__details">
+      <h2 class="chat-header__title">{{chat.title}}</h2>
+      {{#if chat.membersCount}}
+        <div class="chat-header__status">{{chat.membersCount}} участников</div>
+      {{else}}
+        <div class="chat-header__status">{{chat.status}}</div>
+      {{/if}}
+    </div>
+  </a>
+
+  <div class="chat-header__actions">
+    {{#if chat.isGroup}}
+      <button class="chat-header__action-btn" title="Добавить участников">
+        {{> person-add-icon}}
+      </button>
+    {{/if}}
+
+    <button class="chat-header__action-btn" title="Поиск в чате">
+      {{> search-icon}}
+    </button>
+
+    <button class="chat-header__action-btn" title="Меню">
+      {{> menu-icon}}
+    </button>
+  </div>
+</div>

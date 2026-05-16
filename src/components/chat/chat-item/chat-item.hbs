@@ -1,0 +1,43 @@
+<a href="/chat/{{chat.id}}" class="chat-item {{#if chat.unreadCount}}chat-item--unread{{/if}} {{#if isActive}}chat-item--active{{/if}}" data-chat-id="{{chat.id}}">
+  <div class="chat-item__avatar">
+    {{> avatar url=chat.avatarUrl name=chat.title size="medium"}}
+    {{#if chat.online}}
+      <div class="chat-item__online-status"></div>
+    {{/if}}
+  </div>
+
+  <div class="chat-item__content">
+    <div class="chat-item__header">
+      <h3 class="chat-item__title">{{chat.title}}</h3>
+      {{#if chat.lastMessage}}
+        <div class="chat-item__meta">
+          <time class="chat-item__time">{{formatTime chat.lastMessage.time}}</time>
+          {{#if chat.isPinned}}
+            <div class="chat-item__pin">
+              {{> push-pin-icon}}
+            </div>
+          {{/if}}
+        </div>
+      {{else}}
+        {{#if chat.isPinned}}
+          <div class="chat-item__pin">
+            {{> push-pin-icon}}
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{#if chat.lastMessage}}
+      <div class="chat-item__message">
+        {{#if chat.lastMessage.senderName}}
+          <span class="chat-item__sender">{{chat.lastMessage.senderName}}:</span>
+        {{/if}}
+        <span class="chat-item__text">{{truncate chat.lastMessage.text 45}}</span>
+      </div>
+    {{/if}}
+  </div>
+
+  {{#if chat.unreadCount}}
+    <div class="chat-item__badge">{{chat.unreadCount}}</div>
+  {{/if}}
+</a>

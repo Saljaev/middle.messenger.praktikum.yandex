@@ -1,0 +1,96 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.sidebar-header {
+  height: $header-height;
+  padding: 0 $spacer-md;
+
+  @include flex-between;
+  background-color: $bg-primary;
+  border-bottom: 1px solid $bg-tertiary;
+
+  &__user {
+    @include flex-center;
+    gap: $spacer-sm;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__user-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__user-display-name {
+    font-weight: 500;
+    color: $gray-900;
+    font-size: $font-size-base;
+
+    @include text-truncate;
+    max-width: 150px;
+  }
+
+  &__user-status {
+    font-size: $font-size-sm;
+    color: $gray-500;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacer-xs;
+  }
+
+  &__action-btn {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: $gray-600;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $gray-200;
+      color: $gray-900;
+    }
+
+    .material-symbols-outlined {
+      font-size: 24px;
+    }
+  }
+}
+
+.sidebar__search {
+  padding: $spacer-sm $spacer-md;
+  border-bottom: 1px solid $bg-tertiary;
+
+  &-input {
+    width: 100%;
+    padding: $spacer-xs $spacer-sm;
+    border: none;
+    background-color: $gray-100;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-base;
+    outline: none;
+
+    &:focus {
+      background-color: $white;
+      box-shadow: 0 0 0 2px $primary-color;
+    }
+
+    &::placeholder {
+      color: $gray-500;
+    }
+  }
+}
+
+.sidebar__chat-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacer-xs 0;
+}

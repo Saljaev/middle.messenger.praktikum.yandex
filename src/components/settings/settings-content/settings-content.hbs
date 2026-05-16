@@ -1,0 +1,19 @@
+<main class="settings-window">
+  <header class="settings-window__header">
+    <a href="/" class="settings-window__back-btn">
+      {{> back-icon size="default"}}
+    </a>
+    <h1 class="settings-window__title">Настройки профиля</h1>
+  </header>
+
+  <div class="settings-window__content">
+    {{> settings-form
+      first_name=currentUser.first_name
+      second_name=currentUser.second_name
+      display_name=currentUser.display_name
+      login=currentUser.login
+      email=currentUser.email
+      phone=currentUser.phone
+    }}
+  </div>
+</main>

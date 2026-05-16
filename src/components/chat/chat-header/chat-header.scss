@@ -1,0 +1,66 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.chat-header {
+  height: $header-height;
+  padding: 0 $spacer-md;
+
+  @include flex-between;
+  background-color: $bg-primary;
+  border-bottom: 1px solid $bg-tertiary;
+
+  &__info {
+    @include flex-center;
+    gap: $spacer-sm;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: $font-size-base;
+    font-weight: 500;
+    color: $gray-900;
+
+    @include text-truncate;
+  }
+
+  &__status {
+    font-size: $font-size-sm;
+    color: $gray-500;
+
+    @include text-truncate;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacer-xs;
+  }
+
+  &__action-btn {
+    @include flex-center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: $gray-600;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $gray-200;
+      color: $gray-900;
+    }
+
+    .material-symbols-outlined {
+      font-size: 24px;
+    }
+  }
+}
