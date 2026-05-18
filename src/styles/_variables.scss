@@ -26,7 +26,16 @@ $message-incoming: $white;
 $message-outgoing: $primary-color;
 $message-text-incoming: $gray-900;
 $message-text-outgoing: $white;
-$font-family: 'Inter', -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, oxygen, ubuntu, cantarell, sans-serif;
+$font-family:
+    'Inter',
+    -apple-system,
+    blinkmacsystemfont,
+    'Segoe UI',
+    roboto,
+    oxygen,
+    ubuntu,
+    cantarell,
+    sans-serif;
 $font-size-base: 14px;
 $font-size-sm: 12px;
 $font-size-lg: 16px;

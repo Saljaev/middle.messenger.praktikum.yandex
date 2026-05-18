@@ -8,6 +8,7 @@
 - [Сборка и запуск](#сборка-и-запуск)
 - [Просмотр проекта](#просмотр-проекта)
 - [Линтинг](#линтинг)
+- [Update Notes](#update-notes)
 
 ---
 
@@ -15,10 +16,12 @@
 Это мой образовательный проект, в котором я разрабатываю клиентское веб-приложение мессенджера с использованием шаблонизатора Handlebars и препроцессора Sass. Приложение представляет собой SPA (Single Page Application) с клиентской маршрутизацией, mock-авторизацией и полностью компонентной архитектурой.
 
 Основные решения:
+- **TypeScript**
 - **Vite** — сборка, dev-сервер и превью
 - **Handlebars** — шаблонизация с partials и helpers
-- **Sass (SCSS)** — модульная стилизация рядом с компонентами
-- **Mock-авторизация** — localStorage, пользователь `test`/`123456`
+- **Sass (SCSS)** — модульная стилизация
+- **MVC** — разделение на Model, View (Block), Controller
+- **Mock-авторизация** — localStorage, пользователь `test` / `123456`
 
 ---
 
@@ -44,29 +47,32 @@
 ```
 src/
 ├── components/
-│   ├── base/           # avatar, icons (Google Material Symbols)
-│   ├── chat/           # sidebar-header, chat-item, chat-window,
-│   │                   # chat-header, chat-info, message, message-input
-│   ├── form/           # login-form, register-form, settings-form, password-form
-│   ├── settings/       # settings-content, avatar-upload, settings-avatar-content,
-│   │                   # settings-password-content
-│   └── toast/          # toast-уведомления
-├── layouts/            # main, login, register, error-404, error-500
+│   ├── base/           # Button, Input, Icon (атомарные компоненты)
+│   ├── chat/           # ChatWindow, ChatHeader, Message, MessageForm,
+│   │                   # ChatInfoContent, ChatEmpty, MainLayout
+│   ├── form/           # Form, LoginForm, RegisterForm, SettingsForm,
+│   │                   # SettingsPasswordForm, SettingsAvatarForm, MessageForm
+│   └── settings/       # SettingsContent, SettingsPasswordContent,
+│                       # SettingsAvatarContent
+├── controllers/        # AuthController, ChatsController (MVC)
+├── core/               # Block, EventBus, Model, Controller
+├── helpers/            # formatTime
+├── mocks/              # chats.ts, users.ts
+├── models/             # AuthModel, ChatsModel (MVC)
+├── pages/              # LoginPage, RegisterPage, Error404Page, Error500Page
 ├── styles/             # variables, mixins, base, layout, forms, auth, settings
-│   └── index.scss      # агрегатор: только @use
-├── mocks/              # chats.js, users.js
-├── helpers/            # formatTime.js, truncate.js
-├── utils/              # notifications.js (toast)
-├── auth.js             # mock-авторизация через localStorage
-├── render.js           # роутер, рендеринг, регистрация partials/helpers
-└── main.js             # точка входа
+│   └── index.scss      # агрегатор стилей
+├── types/              # глобальные типы и интерфейсы форм
+├── utils/              # validation, notifications, messages
+├── App.ts              # роутер, рендеринг страниц
+└── main.ts             # точка входа
 ```
 
 ---
 
 ## Сборка и запуск
 
-Рекомендуется использовать версию NodeJS не ниже `22.15.17` 
+Рекомендуется использовать версию NodeJS не ниже `22.15.17`
 
 ```bash
 # Установка зависимостей
@@ -102,9 +108,45 @@ ___
 ## Линтинг
 
 ```bash
-# Проверка кода
+# Проверка JS/TS
 npm run lint
 
-# Автоисправление
+# Автоисправление JS/TS
 npm run lint:fix
+
+# Проверка стилей (SCSS)
+npm run lint:css
+
+# Автоисправление стилей
+npm run lint:css:fix
+
+# Проверка форматирования (Prettier)
+npm run format
+
+# Автоисправление форматирования
+npm run format:fix
+
+# Проверка всего сразу (lint + css + format)
+npm run check:all
+
+# Автоисправление всего сразу
+npm run check:all:fix
+
+# Проверка типов TypeScript
+npm run type-check
 ```
+
+---
+
+## Update Notes
+
+### Sprint_2
+- Смигрированы многие компоненты с чистого JS на TS. Предыдущие компоненты с шаблонизатором написаны с использованием **Block**
+- Добавлена валидация форм
+- Добавлены линтеры и форматтеры
+- Добавлены следующие команды в **package.json**:
+  - `type-check`
+  - `lint`
+  - `lint:css`
+  - `format`
+  - `check:all`

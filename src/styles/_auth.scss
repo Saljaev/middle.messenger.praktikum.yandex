@@ -2,76 +2,76 @@
 @use 'mixins' as *;
 
 .auth-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: $spacer-md;
-  background: $bg-secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: $spacer-md;
+    background: $bg-secondary;
 }
 
 .auth-card {
-  width: 100%;
-  max-width: 400px;
-  background: $bg-primary;
-  border-radius: $border-radius;
-  box-shadow: 0 2px 8px rgba($black, 0.1);
-  padding: $spacer-xl;
+    width: 100%;
+    max-width: 400px;
+    background: $bg-primary;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 8px rgba($black, 0.1);
+    padding: $spacer-xl;
 
-  &__title {
-    margin-bottom: $spacer-lg;
-    text-align: center;
-    color: $gray-900;
-    font-size: $font-size-xl;
-    font-weight: 500;
-  }
+    &__title {
+        margin-bottom: $spacer-lg;
+        text-align: center;
+        color: $gray-900;
+        font-size: $font-size-xl;
+        font-weight: 500;
+    }
 
-  &__content {
-    margin-bottom: $spacer-lg;
-  }
+    &__content {
+        margin-bottom: $spacer-lg;
+    }
 
-  &__footer {
-    text-align: center;
-    padding-top: $spacer-md;
-    border-top: 1px solid $gray-200;
-  }
+    &__footer {
+        text-align: center;
+        padding-top: $spacer-md;
+        border-top: 1px solid $gray-200;
+    }
 }
 
 .error-page {
-  @include flex-center;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: $spacer-md;
-  background: $bg-secondary;
+    @include flex-center;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: $spacer-md;
+    background: $bg-secondary;
 
-  &__code {
-    font-size: 6rem;
-    font-weight: 700;
-    color: $primary-color;
-    margin-bottom: $spacer-md;
-  }
+    &__code {
+        font-size: 6rem;
+        font-weight: 700;
+        color: $primary-color;
+        margin-bottom: $spacer-md;
+    }
 
-  &__title {
-    font-size: $font-size-xl;
-    font-weight: 500;
-    color: $gray-900;
-    margin-bottom: $spacer-sm;
-  }
+    &__title {
+        font-size: $font-size-xl;
+        font-weight: 500;
+        color: $gray-900;
+        margin-bottom: $spacer-sm;
+    }
 
-  &__text {
-    font-size: $font-size-base;
-    color: $gray-600;
-    margin-bottom: $spacer-lg;
-    text-align: center;
-  }
+    &__text {
+        font-size: $font-size-base;
+        color: $gray-600;
+        margin-bottom: $spacer-lg;
+        text-align: center;
+    }
 }
 
 .auth-footer {
-  margin-top: $spacer-md;
-  font-size: $font-size-sm;
-  color: $gray-600;
+    margin-top: $spacer-md;
+    font-size: $font-size-sm;
+    color: $gray-600;
 
-  .link {
-    margin-left: $spacer-xs;
-  }
+    .link {
+        margin-left: $spacer-xs;
+    }
 }

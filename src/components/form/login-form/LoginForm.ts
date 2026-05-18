@@ -1,0 +1,53 @@
+import {Block, BlockOwnProps} from '../../../core/Block';
+import {Form} from '../../form/Form';
+import {Input} from '../../base/input/Input';
+import {Button} from '../../base/button/Button';
+import {authController} from '../../../controllers/AuthController';
+import {navigateTo} from '../../../App';
+import {LoginFormData} from '../../../types';
+
+interface LoginFormProps extends BlockOwnProps {}
+
+export class LoginForm extends Block<LoginFormProps> {
+    protected template = `
+        {{{form}}}
+    `;
+
+    constructor(props: LoginFormProps = {}) {
+        const form = new Form<LoginFormData>({
+            id: 'loginForm',
+            onSubmit: (data) => {
+                console.log(data);
+                const success = authController.signIn(data.login, data.password);
+                if (success) {
+                    navigateTo('/');
+                }
+            },
+            children: [
+                new Input({
+                    name: 'login',
+                    label: 'Логин',
+                    placeholder: 'Введите логин',
+                    required: true,
+                }),
+                new Input({
+                    name: 'password',
+                    label: 'Пароль',
+                    type: 'password',
+                    placeholder: 'Введите пароль',
+                    required: true,
+                }),
+                new Button({
+                    label: 'Войти',
+                    type: 'submit',
+                    className: 'button_primary button_full-width',
+                }),
+            ],
+        });
+
+        super({
+            ...props,
+            form,
+        });
+    }
+}
