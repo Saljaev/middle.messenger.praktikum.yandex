@@ -3,115 +3,115 @@
 @use 'mixins' as *;
 
 .message {
-  display: flex;
-  margin-bottom: $spacer-xs;
-
-  &__content {
-    max-width: 70%;
     display: flex;
-    flex-direction: column;
-  }
-
-  &__sender {
-    display: flex;
-    align-items: center;
-    gap: $spacer-xs;
     margin-bottom: $spacer-xs;
 
-    &-name {
-      font-size: $font-size-sm;
-      font-weight: 500;
-      color: $primary-color;
-    }
-  }
-
-  &__text {
-    padding: $spacer-sm $spacer-md;
-    border-radius: $border-radius-lg;
-    overflow-wrap: break-word;
-    font-size: $font-size-base;
-    line-height: 1.4;
-  }
-
-  &__meta {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: $spacer-xs;
-    margin-top: $spacer-xs;
-  }
-
-  &__time {
-    font-size: $font-size-sm;
-  }
-
-  &__status {
-    color: $gray-500;
-
-    &--read {
-      color: $primary-color;
+    &__content {
+        max-width: 70%;
+        display: flex;
+        flex-direction: column;
     }
 
-    .material-symbols-outlined {
-      font-size: 16px;
-    }
-  }
+    &__sender {
+        display: flex;
+        align-items: center;
+        gap: $spacer-xs;
+        margin-bottom: $spacer-xs;
 
-  &--incoming {
-    justify-content: flex-start;
-
-    .message__text {
-      background-color: $message-incoming;
-      color: $message-text-incoming;
-      border-bottom-left-radius: $border-radius-sm;
-      box-shadow: 0 1px 2px rgba($black, 0.1);
-      border: 1px solid $gray-300;
+        &-name {
+            font-size: $font-size-sm;
+            font-weight: 500;
+            color: $primary-color;
+        }
     }
 
-    .message__time {
-      color: $gray-500;
-    }
-  }
-
-  &--outgoing {
-    justify-content: flex-end;
-
-    .message__content {
-      align-items: flex-end;
+    &__text {
+        padding: $spacer-sm $spacer-md;
+        border-radius: $border-radius-lg;
+        overflow-wrap: break-word;
+        font-size: $font-size-base;
+        line-height: 1.4;
     }
 
-    .message__text {
-      background-color: $message-outgoing;
-      color: $message-text-outgoing;
-      border-bottom-right-radius: $border-radius-sm;
-      box-shadow: 0 1px 2px rgba($black, 0.1);
-      border: 1px solid color.adjust($primary-color, $lightness: -10%);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      gap: 4px;
+    &__meta {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: $spacer-xs;
+        margin-top: $spacer-xs;
     }
 
-    .message__meta-inline {
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
-      margin-left: auto;
-      font-size: 11px;
-      white-space: nowrap;
-      opacity: 0.9;
+    &__time {
+        font-size: $font-size-sm;
     }
 
-    .message__time {
-      color: rgba($message-text-outgoing, 0.9);
+    &__status {
+        color: $gray-500;
+
+        &--read {
+            color: $primary-color;
+        }
+
+        .material-symbols-outlined {
+            font-size: 16px;
+        }
     }
 
-    .message__status {
-      color: rgba($white, 0.7);
+    &--incoming {
+        justify-content: flex-start;
 
-      &--read {
-        color: $white;
-      }
+        .message__text {
+            background-color: $message-incoming;
+            color: $message-text-incoming;
+            border-bottom-left-radius: $border-radius-sm;
+            box-shadow: 0 1px 2px rgba($black, 0.1);
+            border: 1px solid $gray-300;
+        }
+
+        .message__time {
+            color: $gray-500;
+        }
     }
-  }
+
+    &--outgoing {
+        justify-content: flex-end;
+
+        .message__content {
+            align-items: flex-end;
+        }
+
+        .message__text {
+            background-color: $message-outgoing;
+            color: $message-text-outgoing;
+            border-bottom-right-radius: $border-radius-sm;
+            box-shadow: 0 1px 2px rgba($black, 0.1);
+            border: 1px solid color.adjust($primary-color, $lightness: -10%);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .message__meta-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            margin-left: auto;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0.9;
+        }
+
+        .message__time {
+            color: rgba($message-text-outgoing, 0.9);
+        }
+
+        .message__status {
+            color: rgba($white, 0.7);
+
+            &--read {
+                color: $white;
+            }
+        }
+    }
 }

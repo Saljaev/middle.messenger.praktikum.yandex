@@ -2,40 +2,42 @@
 @use 'mixins' as *;
 
 .toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-  padding: $spacer-md $spacer-lg;
-  border-radius: $border-radius;
-  color: $white;
-  font-weight: 500;
-  box-shadow: 0 4px 12px rgba($black, 0.15);
-  transform: translateX(100%);
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  max-width: 400px;
-  overflow-wrap: break-word;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: $spacer-md $spacer-lg;
+    border-radius: $border-radius;
+    color: $white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba($black, 0.15);
+    transform: translateX(100%);
+    opacity: 0;
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
+    max-width: 400px;
+    overflow-wrap: break-word;
 
-  &.show {
-    transform: translateX(0);
-    opacity: 1;
-  }
+    &.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
 
-  &--success {
-    background-color: $success-color;
-  }
+    &--success {
+        background-color: $success-color;
+    }
 
-  &--error {
-    background-color: $danger-color;
-  }
+    &--error {
+        background-color: $danger-color;
+    }
 
-  &--warning {
-    background-color: $warning-color;
-  }
+    &--warning {
+        background-color: $warning-color;
+    }
 
-  &__content {
-    @include flex-center;
-    gap: $spacer-sm;
-  }
+    &__content {
+        @include flex-center;
+        gap: $spacer-sm;
+    }
 }
