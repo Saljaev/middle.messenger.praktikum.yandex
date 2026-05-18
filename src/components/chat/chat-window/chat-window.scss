@@ -2,69 +2,69 @@
 @use 'mixins' as *;
 
 .chat-window {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  background-color: $bg-secondary;
-
-  &__empty {
-    @include flex-center;
-    flex-direction: column;
-    height: 100%;
-    color: $gray-500;
-  }
-
-  &__empty-icon {
-    font-size: 4rem;
-    margin-bottom: $spacer-md;
-  }
-
-  &__empty-title {
-    font-size: $font-size-xl;
-    font-weight: 500;
-    margin-bottom: $spacer-sm;
-    color: $gray-700;
-  }
-
-  &__empty-text {
-    font-size: $font-size-base;
-    color: $gray-500;
-  }
-
-  &__messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: $spacer-md;
     display: flex;
     flex-direction: column;
-    gap: $spacer-sm;
-  }
+    height: 100vh;
+    width: 100vw;
+    background-color: $bg-secondary;
+
+    &__empty {
+        @include flex-center;
+        flex-direction: column;
+        height: 100%;
+        color: $gray-500;
+    }
+
+    &__empty-icon {
+        font-size: 4rem;
+        margin-bottom: $spacer-md;
+    }
+
+    &__empty-title {
+        font-size: $font-size-xl;
+        font-weight: 500;
+        margin-bottom: $spacer-sm;
+        color: $gray-700;
+    }
+
+    &__empty-text {
+        font-size: $font-size-base;
+        color: $gray-500;
+    }
+
+    &__messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: $spacer-md;
+        display: flex;
+        flex-direction: column;
+        gap: $spacer-sm;
+    }
 }
 
 .message-date-divider {
-  text-align: center;
-  margin: $spacer-sm 0;
-  position: relative;
-
-  &__label {
-    display: inline-block;
-    padding: $spacer-xs $spacer-sm;
-    background-color: $bg-secondary;
-    color: $gray-500;
-    font-size: $font-size-sm;
+    text-align: center;
+    margin: $spacer-sm 0;
     position: relative;
-    z-index: 1;
-    border-radius: $border-radius-sm;
-  }
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: $gray-300;
-  }
+    &__label {
+        display: inline-block;
+        padding: $spacer-xs $spacer-sm;
+        background-color: $bg-secondary;
+        color: $gray-500;
+        font-size: $font-size-sm;
+        position: relative;
+        z-index: 1;
+        border-radius: $border-radius-sm;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: $gray-300;
+    }
 }
