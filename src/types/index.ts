@@ -9,15 +9,6 @@ export interface User {
     avatar?: string;
 }
 
-export interface Chat {
-    id: number;
-    title: string;
-    avatar?: string;
-    unread_count: number;
-    last_message?: Message;
-    created_by?: number;
-}
-
 export interface Message {
     id: number;
     chat_id: number;
