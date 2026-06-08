@@ -1,7 +1,6 @@
 import {ChatResponse} from '../api/types';
 import {chatsModel} from '../models/ChatsModel';
 import {formatTime} from '../helpers/formatTime';
-import {chats, MockChat} from '../mocks/chats';
 
 export interface PreparedChat {
     id: number;
@@ -64,14 +63,6 @@ export function parseChatPath(path: string): {chatId: number; info: boolean} | n
     const infoMatch = path.match(/^\/chat\/(\d+)\/info$/);
     if (infoMatch) return {chatId: parseInt(infoMatch[1], 10), info: true};
     return null;
-}
-
-export function getChatById(id: number): MockChat | undefined {
-    return chats.find((chat) => chat.id === id);
-}
-
-export function getAllChats(): MockChat[] {
-    return chats;
 }
 
 export function getApiChatById(id: number): ChatResponse | undefined {
