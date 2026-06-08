@@ -11,31 +11,35 @@ export class AuthController extends Controller<AuthModel, Block> {
 
     public init(): void {}
 
-    public signIn(login: string, password: string): boolean {
-        const result = this.model.login(login, password);
-        if (!result.success && result.error) {
-            showError(result.error);
+    public async signIn(login: string, password: string): Promise<boolean> {
+        try {
+            await this.model.login(login, password);
+            return true;
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Ошибка входа';
+            showError(message);
             return false;
         }
-        return true;
     }
 
-    public signUp(userData: RegisterFormData): boolean {
+    public async signUp(userData: RegisterFormData): Promise<boolean> {
         if (!this.model.validatePasswords(userData.password, userData.password_confirm)) {
             showError('Пароли не совпадают');
             return false;
         }
 
-        const result = this.model.register(userData);
-        if (!result.success && result.error) {
-            showError(result.error);
+        try {
+            await this.model.register(userData);
+            return true;
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Ошибка регистрации';
+            showError(message);
             return false;
         }
-        return true;
     }
 
-    public logout(): void {
-        this.model.logout();
+    public async logout(): Promise<void> {
+        await this.model.logout();
     }
 
     public isAuthenticated(): boolean {
@@ -46,32 +50,56 @@ export class AuthController extends Controller<AuthModel, Block> {
         return this.model.getCurrentUser();
     }
 
-    public updateProfile(data: ProfileFormData): boolean {
-        const result = this.model.updateProfile(data);
-        if (!result.success && result.error) {
-            showError(result.error);
+    public async updateProfile(data: ProfileFormData): Promise<boolean> {
+        try {
+            await this.model.updateProfile(data);
+            showSuccess('Настройки сохранены');
+            return true;
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Ошибка обновления профиля';
+            showError(message);
             return false;
         }
-        showSuccess('Настройки сохранены');
-        return true;
     }
 
-    public updatePassword(
+    public async updatePassword(
         oldPassword: string,
         newPassword: string,
         confirmPassword: string,
-    ): boolean {
-        const result = this.model.updatePassword(oldPassword, newPassword, confirmPassword);
-        if (!result.success && result.error) {
-            showError(result.error);
+    ): Promise<boolean> {
+        try {
+            await this.model.updatePassword(oldPassword, newPassword, confirmPassword);
+            showSuccess('Пароль успешно изменен');
+            return true;
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Ошибка смены пароля';
+            showError(message);
             return false;
         }
-        showSuccess('Пароль успешно изменен');
-        return true;
+    }
+
+    public async updateAvatar(data: FormData): Promise<boolean> {
+        try {
+            await this.model.updateAvatar(data);
+            showSuccess('Аватар успешно загружен');
+            return true;
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Ошибка загрузки аватара';
+            showError(message);
+            return false;
+        }
     }
 
     public generateDisplayName(): string {
         return this.model.generateDisplayName();
+    }
+
+    public async fetchUser(): Promise<boolean> {
+        try {
+            return await this.model.fetchUser();
+        } catch {
+            return false;
+        }
     }
 }
 

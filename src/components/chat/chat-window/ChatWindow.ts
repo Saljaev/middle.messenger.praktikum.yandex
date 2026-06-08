@@ -1,5 +1,5 @@
 import {Block, BlockOwnProps} from '../../../core/Block';
-import {Icon} from '../../base/icon/Icon';
+// import {Icon} from '../../base/icon/Icon';
 
 interface ChatWindowProps extends BlockOwnProps {
     chat?: Record<string, unknown>;
@@ -19,9 +19,9 @@ export class ChatWindow extends Block<ChatWindowProps> {
                 {{{input}}}
             {{else}}
                 <div class="chat-window__empty">
-                    {{{chatIcon}}}
-                    <h2 class="chat-window__empty-title">Добро пожаловать</h2>
-                    <p class="chat-window__empty-text">Выберите чат чтобы начать общение</p>
+                <div class="chat-window__empty-icon">💬</div>
+                <h2 class="chat-window__empty-title">Выберите чат</h2>
+                <p class="chat-window__empty-text">Начните общение, выбрав чат из списка</p>
                 </div>
             {{/if}}
         </div>
@@ -30,7 +30,7 @@ export class ChatWindow extends Block<ChatWindowProps> {
     constructor(props: ChatWindowProps) {
         super({
             ...props,
-            chatIcon: new Icon({name: 'chat', className: 'chat-window__empty-icon'}),
+            // chatIcon: new Icon({name: 'chat', className: 'chat-window__empty-icon'}),
         });
     }
 }

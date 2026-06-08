@@ -1,6 +1,8 @@
 import {Model} from '../core/Model';
-import {defaultUsers} from '../mocks/users';
 import {ProfileFormData, RegisterFormData} from '../types';
+import AuthAPI from '../api/AuthAPI';
+import UserAPI from '../api/UserAPI';
+import store from '../core/Store';
 
 interface AuthState {
     user: Record<string, unknown> | null;
@@ -8,139 +10,114 @@ interface AuthState {
     [key: string]: unknown;
 }
 
-interface AuthResult {
-    success: boolean;
-    user?: Record<string, unknown>;
-    error?: string;
-}
-
-const AUTH_KEY = 'auth_token';
-const USER_KEY = 'current_user';
-const USERS_KEY = 'mock_users';
-
-type MockUserRecord = Record<string, unknown>;
-
-function getMockUsers(): MockUserRecord[] {
-    const stored = localStorage.getItem(USERS_KEY);
-    return stored ? JSON.parse(stored) : [...(defaultUsers as unknown as MockUserRecord[])];
-}
-
-function saveMockUsers(users: MockUserRecord[]): void {
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
 export class AuthModel extends Model<AuthState> {
     constructor() {
-        const userData = localStorage.getItem(USER_KEY);
-        const isAuth = localStorage.getItem(AUTH_KEY) !== null;
         super({
-            user: userData ? JSON.parse(userData) : null,
-            isAuthenticated: isAuth,
+            user: null,
+            isAuthenticated: false,
         });
     }
 
-    login(login: string, password: string): AuthResult {
-        const mockUsers = getMockUsers();
-        const user = mockUsers.find((u) => u.login === login && u.password === password);
-
-        if (user) {
-            const userData = {...user};
-            delete userData['password'];
-            localStorage.setItem(AUTH_KEY, 'mock-token-' + Date.now());
-            localStorage.setItem(USER_KEY, JSON.stringify(userData));
-            this.setState({user: userData, isAuthenticated: true});
-            return {success: true, user: userData};
+    public async login(login: string, password: string): Promise<boolean> {
+        try {
+            await AuthAPI.signIn({login, password});
+            const user = await AuthAPI.getUser();
+            this.setUser(user);
+            return true;
+        } catch (error) {
+            const err = error as {response?: {reason?: string}; reason?: string};
+            const message = err.response?.reason || err.reason || 'Ошибка входа';
+            throw new Error(message, {cause: error});
         }
-
-        return {success: false, error: 'Неверный логин или пароль'};
     }
 
-    register(userData: RegisterFormData): AuthResult {
-        const mockUsers = getMockUsers();
-        const email = String(userData.email);
-        const login = String(userData.login);
-        const first_name = String(userData.first_name);
-        const second_name = String(userData.second_name);
-
-        const existingUser = mockUsers.find((u) => u.login === login || u.email === email);
-        if (existingUser) {
-            return {
-                success: false,
-                error: 'Пользователь с таким логином или email уже существует',
-            };
+    public async register(userData: RegisterFormData): Promise<boolean> {
+        try {
+            await AuthAPI.signUp({
+                first_name: userData.first_name,
+                second_name: userData.second_name,
+                login: userData.login,
+                email: userData.email,
+                password: userData.password,
+                phone: userData.phone,
+            });
+            const user = await AuthAPI.getUser();
+            this.setUser(user);
+            return true;
+        } catch (error) {
+            const err = error as {response?: {reason?: string}; reason?: string};
+            const message = err.response?.reason || err.reason || 'Ошибка регистрации';
+            throw new Error(message, {cause: error});
         }
-
-        const newUser: Record<string, unknown> = {
-            id: 999,
-            ...userData,
-            avatarUrl: `https://placehold.co/200/0088cc/white?text=${first_name[0]}+${second_name[0]}`,
-            display_name: this.generateDisplayName(),
-            status: 'online',
-        };
-
-        mockUsers.push(newUser);
-        saveMockUsers(mockUsers);
-
-        const userWithoutPassword = {...newUser};
-        delete userWithoutPassword['password'];
-        localStorage.setItem(AUTH_KEY, 'mock-token-' + Date.now());
-        localStorage.setItem(USER_KEY, JSON.stringify(userWithoutPassword));
-        this.setState({user: userWithoutPassword, isAuthenticated: true});
-
-        return {success: true, user: userWithoutPassword};
     }
 
-    logout(): void {
-        localStorage.removeItem(AUTH_KEY);
-        localStorage.removeItem(USER_KEY);
-        this.setState({user: null, isAuthenticated: false});
+    public async logout(): Promise<void> {
+        this.clearUser();
+        try {
+            await AuthAPI.logout();
+        } catch {
+            // ignore logout errors
+        }
     }
 
-    validatePasswords(password: string, confirmPassword: string): boolean {
+    public async fetchUser(): Promise<boolean> {
+        try {
+            const user = await AuthAPI.getUser();
+            this.setUser(user);
+            return true;
+        } catch {
+            this.clearUser();
+            return false;
+        }
+    }
+
+    public validatePasswords(password: string, confirmPassword: string): boolean {
         return password === confirmPassword;
     }
 
-    updateProfile(updatedData: ProfileFormData): AuthResult {
-        const currentUser = this.getCurrentUser();
-        if (!currentUser) {
-            return {success: false, error: 'Пользователь не авторизован'};
+    public async updateProfile(updatedData: ProfileFormData): Promise<boolean> {
+        try {
+            const user = await UserAPI.changeProfile(updatedData);
+            this.setUser(user);
+            return true;
+        } catch (error) {
+            const err = error as {response?: {reason?: string}; reason?: string};
+            const message = err.response?.reason || err.reason || 'Ошибка обновления профиля';
+            throw new Error(message, {cause: error});
         }
-
-        const mockUsers = getMockUsers();
-        const userIndex = mockUsers.findIndex((u) => u.id === currentUser.id);
-        if (userIndex === -1) {
-            return {success: false, error: 'Пользователь не найден'};
-        }
-
-        mockUsers[userIndex] = {
-            ...mockUsers[userIndex],
-            ...updatedData,
-        };
-        saveMockUsers(mockUsers);
-
-        const {password: _pwd, ...userWithoutPassword} = mockUsers[userIndex];
-        localStorage.setItem(USER_KEY, JSON.stringify(userWithoutPassword));
-        this.setState({user: userWithoutPassword});
-
-        const sidebarName = document.querySelector('.sidebar-header__user-display-name');
-        if (sidebarName && sidebarName.textContent !== updatedData.display_name) {
-            sidebarName.textContent = updatedData.display_name;
-        }
-
-        return {success: true, user: userWithoutPassword};
     }
 
-    updatePassword(_oldPassword: string, newPassword: string, confirmPassword: string): AuthResult {
+    public async updatePassword(
+        oldPassword: string,
+        newPassword: string,
+        confirmPassword: string,
+    ): Promise<boolean> {
         if (newPassword !== confirmPassword) {
-            return {success: false, error: 'Пароли не совпадают'};
+            throw new Error('Пароли не совпадают');
         }
-        if (newPassword.length < 6) {
-            return {success: false, error: 'Пароль должен содержать минимум 6 символов'};
+        try {
+            await UserAPI.changePassword({oldPassword, newPassword});
+            return true;
+        } catch (error) {
+            const err = error as {response?: {reason?: string}; reason?: string};
+            const message = err.response?.reason || err.reason || 'Ошибка смены пароля';
+            throw new Error(message, {cause: error});
         }
-        return {success: true};
     }
 
-    generateDisplayName(): string {
+    public async updateAvatar(data: FormData): Promise<boolean> {
+        try {
+            const user = await UserAPI.changeAvatar(data);
+            this.setUser(user);
+            return true;
+        } catch (error) {
+            const err = error as {response?: {reason?: string}; reason?: string};
+            const message = err.response?.reason || err.reason || 'Ошибка загрузки аватара';
+            throw new Error(message, {cause: error});
+        }
+    }
+
+    public generateDisplayName(): string {
         const animals = [
             'Wolf',
             'Tiger',
@@ -159,12 +136,25 @@ export class AuthModel extends Model<AuthState> {
         return `${randomAnimal}${randomNumber.toString().padStart(6, '0')}`;
     }
 
-    getCurrentUser(): Record<string, unknown> | null {
-        return this.state.user;
+    public getCurrentUser(): Record<string, unknown> | null {
+        return (store.getState().user as Record<string, unknown> | null) ?? this.state.user;
     }
 
-    isAuthenticated(): boolean {
-        return this.state.isAuthenticated;
+    public isAuthenticated(): boolean {
+        return (store.getState().isAuthenticated as boolean) ?? this.state.isAuthenticated;
+    }
+
+    private setUser(user: unknown): void {
+        const userRecord = user as Record<string, unknown>;
+        this.setState({user: userRecord, isAuthenticated: true});
+        store.set('user', userRecord);
+        store.set('isAuthenticated', true);
+    }
+
+    private clearUser(): void {
+        this.setState({user: null, isAuthenticated: false});
+        store.set('user', null);
+        store.set('isAuthenticated', false);
     }
 }
 
