@@ -13,7 +13,7 @@ import {
     phoneValidator,
     passwordValidator,
 } from '../../../utils/validation';
-import {chatsController} from "@/controllers/ChatsController";
+import {chatsController} from '@/controllers/ChatsController';
 
 interface RegisterFormProps extends BlockOwnProps {}
 

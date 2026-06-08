@@ -5,7 +5,7 @@ import {Button} from '../../base/button/Button';
 import {authController} from '../../../controllers/AuthController';
 import Router from '../../../router/Router';
 import {LoginFormData} from '../../../types';
-import {chatsController} from "@/controllers/ChatsController";
+import {chatsController} from '@/controllers/ChatsController';
 
 interface LoginFormProps extends BlockOwnProps {}
 
