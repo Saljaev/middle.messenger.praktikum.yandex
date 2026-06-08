@@ -14,7 +14,7 @@ export class LoginPage extends Block<LoginPageProps> {
                 <div class="auth-card__footer">
                     <div class="auth-footer">
                         Нет аккаунта?
-                        <a href="/register" class="button button_link link">Зарегистрироваться</a>
+                        <a href="/sign-up" class="button button_link link">Зарегистрироваться</a>
                     </div>
                 </div>
             </div>

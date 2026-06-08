@@ -3,7 +3,7 @@ import {Form} from '../../form/Form';
 import {Input} from '../../base/input/Input';
 import {Button} from '../../base/button/Button';
 import {authController} from '../../../controllers/AuthController';
-import {navigateTo} from '../../../App';
+import Router from '../../../router/Router';
 import {RegisterFormData} from '../../../types';
 import {
     emailValidator,
@@ -13,6 +13,7 @@ import {
     phoneValidator,
     passwordValidator,
 } from '../../../utils/validation';
+import {chatsController} from "@/controllers/ChatsController";
 
 interface RegisterFormProps extends BlockOwnProps {}
 
@@ -31,11 +32,11 @@ export class RegisterForm extends Block<RegisterFormProps> {
                 }
                 return errors;
             },
-            onSubmit: (data: RegisterFormData) => {
-                console.log(data);
-                const success = authController.signUp(data);
+            onSubmit: async (data: RegisterFormData) => {
+                const success = await authController.signUp(data);
                 if (success) {
-                    navigateTo('/');
+                    await chatsController.getChats();
+                    Router.getInstance().go('/messenger');
                 }
             },
             children: [

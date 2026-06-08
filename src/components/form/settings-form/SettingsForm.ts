@@ -2,7 +2,7 @@ import {Block, BlockOwnProps} from '../../../core/Block';
 import {Input} from '../../base/input/Input';
 import {Icon} from '../../base/icon/Icon';
 import {authController} from '../../../controllers/AuthController';
-import {navigateTo} from '../../../App';
+import Router from '../../../router/Router';
 import {ProfileFormData} from '../../../types';
 import {
     firstNameValidator,
@@ -21,7 +21,7 @@ export class SettingsForm extends Block<SettingsFormProps> {
                 <h2 class="settings-form__section-title">Личная информация</h2>
                 <div class="settings-profile">
                     <a href="/settings/avatar" class="settings-profile__avatar" title="Нажмите чтобы изменить аватар">
-                        <img src="{{avatarUrl}}" alt="{{firstName}}" class="avatar__image" style="width:64px;height:64px;border-radius:50%;object-fit:cover;">
+                        <img src="{{avatarUrl}}" alt="{{firstName}}" class="avatar__image" style="width:64px;height:64px;border-radius:50%;object-fit:cover;" onerror="this.src='https://placehold.co/200/0088cc/white?text=?'">
                         <div class="settings-profile__avatar-overlay">
                             {{{editAvatarIcon}}}
                         </div>
@@ -108,7 +108,11 @@ export class SettingsForm extends Block<SettingsFormProps> {
 
         super({
             ...props,
-            avatarUrl: String(user.avatarUrl ?? 'https://placehold.co/200/0088cc/white?text=?'),
+            avatarUrl: String(
+                user.avatar
+                    ? `https://ya-praktikum.tech/api/v2/resources${user.avatar}`
+                    : 'https://placehold.co/200/0088cc/white?text=?',
+            ),
             firstName: String(user.first_name ?? ''),
             displayName: String(user.display_name ?? ''),
             firstNameInput,
@@ -138,7 +142,7 @@ export class SettingsForm extends Block<SettingsFormProps> {
         }
     }
 
-    private handleSubmit(e: Event): void {
+    private async handleSubmit(e: Event): Promise<void> {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
@@ -158,14 +162,13 @@ export class SettingsForm extends Block<SettingsFormProps> {
             return;
         }
 
-        console.log(data);
-        authController.updateProfile(data);
+        await authController.updateProfile(data);
     }
 
-    private handleLogout(): void {
+    private async handleLogout(): Promise<void> {
         if (confirm('Вы уверены, что хотите выйти?')) {
-            authController.logout();
-            navigateTo('/login');
+            await authController.logout();
+            Router.getInstance().go('/');
         }
     }
 

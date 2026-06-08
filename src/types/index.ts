@@ -47,3 +47,7 @@ export interface PasswordFormData {
     new_password: string;
     new_password_confirm: string;
 }
+
+export type Indexed<T = unknown> = {
+    [key in string]: T;
+};
