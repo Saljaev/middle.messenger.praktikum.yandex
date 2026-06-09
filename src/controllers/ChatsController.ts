@@ -103,6 +103,18 @@ export class ChatsController extends Controller<ChatsModel, Block> {
         }
     }
 
+    public async updateChatAvatar(chatId: number, file: File): Promise<boolean> {
+        try {
+            await this.model.updateChatAvatar(chatId, file);
+            return true;
+        } catch (error) {
+            const message =
+                error instanceof Error ? error.message : 'Ошибка обновления аватара чата';
+            showError(message);
+            return false;
+        }
+    }
+
     public sendMessage(_chatId: number, _text: string): void {
         // WebSocket will be implemented in the next sprint
     }

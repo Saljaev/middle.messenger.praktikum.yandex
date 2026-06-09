@@ -4,6 +4,8 @@ import {Modal} from '../base/modal/Modal';
 import {CreateChatForm} from '../form/create-chat-form/CreateChatForm';
 import {connect} from '../../utils/connect';
 import {Indexed} from '../../types';
+import {getAvatarUrl} from '../../utils/chats';
+import {PLACEHOLDER_AVATAR_URL} from '@api/const';
 
 interface MainLayoutProps extends BlockOwnProps {
     userAvatar?: string;
@@ -56,7 +58,7 @@ class MainLayout extends Block<MainLayoutProps> {
             <aside class="app__sidebar sidebar">
                 <div class="sidebar-header">
                     <a href="/settings" class="sidebar-header__user">
-                        <img src="{{userAvatar}}" alt="{{userName}}" class="avatar__image" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" onerror="this.src='https://placehold.co/200/0088cc/white?text=?'">
+                        <img src="{{userAvatar}}" alt="{{userName}}" class="avatar__image" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" onerror="this.src='${PLACEHOLDER_AVATAR_URL}'">
                         <div class="sidebar-header__user-info">
                             <span class="sidebar-header__user-display-name">{{userDisplayName}}</span>
                             <span class="sidebar-header__user-status">{{userStatus}}</span>
@@ -86,9 +88,7 @@ class MainLayout extends Block<MainLayoutProps> {
 
 export default connect<MainLayoutProps>((state: Indexed) => {
     const user = (state.user as Record<string, unknown> | null) ?? {};
-    const avatarUrl = user.avatar
-        ? `https://ya-praktikum.tech/api/v2/resources${user.avatar}`
-        : 'https://placehold.co/200/0088cc/white?text=?';
+    const avatarUrl = getAvatarUrl(user.avatar as string | null);
     return {
         userAvatar: String(avatarUrl),
         userName: String(user.first_name ?? ''),

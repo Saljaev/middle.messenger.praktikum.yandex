@@ -1,6 +1,10 @@
 import {ChatResponse} from '../api/types';
 import {chatsModel} from '../models/ChatsModel';
 import {formatTime} from '../helpers/formatTime';
+import {API_BASE_URL, PLACEHOLDER_AVATAR_URL} from '@api/const';
+
+export const getAvatarUrl = (avatar: string | null): string =>
+    avatar ? `${API_BASE_URL}/resources${avatar}` : PLACEHOLDER_AVATAR_URL;
 
 export interface PreparedChat {
     id: number;
@@ -18,9 +22,7 @@ export interface PreparedChat {
 export function prepareChats(chatList: ChatResponse[], activeId: number | null): PreparedChat[] {
     return chatList.map((chat) => {
         const lastMsg = chat.last_message;
-        const avatarUrl = chat.avatar
-            ? `https://ya-praktikum.tech/api/v2/resources${chat.avatar}`
-            : 'https://placehold.co/200/0088cc/white?text=?';
+        const avatarUrl = getAvatarUrl(chat.avatar);
         const title = chat.title || '';
         const unreadCount = chat.unread_count ?? 0;
 

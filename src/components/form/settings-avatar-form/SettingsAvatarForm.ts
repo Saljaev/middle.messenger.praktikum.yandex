@@ -4,6 +4,8 @@ import {Icon} from '../../base/icon/Icon';
 import {Button} from '../../base/button/Button';
 import {authController} from '../../../controllers/AuthController';
 import Router from '../../../router/Router';
+import {getAvatarUrl} from '../../../utils/chats';
+import {PLACEHOLDER_AVATAR_URL} from '@api/const';
 
 interface SettingsAvatarFormProps extends BlockOwnProps {}
 
@@ -13,7 +15,7 @@ export class SettingsAvatarForm extends Block<SettingsAvatarFormProps> {
             <div class="avatar-upload__current">
                 <label for="avatar" class="avatar-upload__dropzone" ref="dropzone">
                     <input type="file" id="avatar" name="avatar" accept="image/*" class="visually-hidden" ref="fileInput">
-                    <img src="{{avatarUrl}}" alt="{{firstName}}" class="avatar__image" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" onerror="this.src='https://placehold.co/200/0088cc/white?text=?'">
+                    <img src="{{avatarUrl}}" alt="{{firstName}}" class="avatar__image" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" onerror="this.src='${PLACEHOLDER_AVATAR_URL}'">
                     <div class="avatar-upload__dropzone-overlay">
                         {{{uploadIcon}}}
                         <div class="avatar-upload__dropzone-text">Нажмите для загрузки</div>
@@ -51,11 +53,7 @@ export class SettingsAvatarForm extends Block<SettingsAvatarFormProps> {
 
         super({
             ...props,
-            avatarUrl: String(
-                user.avatar
-                    ? `https://ya-praktikum.tech/api/v2/resources${user.avatar}`
-                    : 'https://placehold.co/200/0088cc/white?text=?',
-            ),
+            avatarUrl: String(getAvatarUrl(user.avatar as string | null)),
             firstName: String(user.first_name ?? ''),
             form,
             uploadIcon: new Icon({name: 'upload'}),

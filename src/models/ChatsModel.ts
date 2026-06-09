@@ -107,6 +107,20 @@ export class ChatsModel extends Model<ChatsState> {
             throw new Error(message, {cause: error});
         }
     }
+
+    public async updateChatAvatar(chatId: number, file: File): Promise<void> {
+        const formData = new FormData();
+        formData.append('chatId', String(chatId));
+        formData.append('avatar', file);
+        try {
+            await ChatsAPI.updateChatAvatar(formData);
+            await this.fetchChats();
+        } catch (error) {
+            const err = error as {response?: {reason?: string}; reason?: string};
+            const message = err.response?.reason || err.reason || 'Ошибка обновления аватара чата';
+            throw new Error(message, {cause: error});
+        }
+    }
 }
 
 export const chatsModel = new ChatsModel();

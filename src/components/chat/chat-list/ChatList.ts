@@ -3,6 +3,7 @@ import {connect} from '@/utils/connect';
 import {ChatResponse} from '@/api/types';
 import {getActiveChatId, prepareChats} from '@/utils/chats';
 import {Indexed} from '@/types';
+import {PLACEHOLDER_AVATAR_URL} from '@api/const';
 
 interface ChatListProps extends BlockOwnProps {
     chats?: Array<Record<string, unknown>>;
@@ -14,7 +15,7 @@ class ChatList extends Block<ChatListProps> {
             {{#each chats}}
             <a href="/chat/{{this.id}}" class="chat-item {{#if this.isActive}}chat-item--active{{/if}} {{#if this.unreadCount}}chat-item--unread{{/if}}">
                 <div class="chat-item__avatar">
-                    <img src="{{this.avatarUrl}}" alt="{{this.title}}" class="avatar__image" style="width:48px;height:48px;border-radius:50%;object-fit:cover;" onerror="this.src='https://placehold.co/200/0088cc/white?text=?'">
+                    <img src="{{this.avatarUrl}}" alt="{{this.title}}" class="avatar__image" style="width:48px;height:48px;border-radius:50%;object-fit:cover;" onerror="this.src='${PLACEHOLDER_AVATAR_URL}'">
                     {{#if this.online}}
                     <span class="chat-item__online-status"></span>
                     {{/if}}
