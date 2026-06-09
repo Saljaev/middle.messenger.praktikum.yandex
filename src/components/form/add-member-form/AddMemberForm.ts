@@ -6,6 +6,7 @@ import {UserList} from '../../user/user-list/UserList';
 import {UserListItem} from '../../user/user-list-item/UserListItem';
 import UserAPI from '../../../api/UserAPI';
 import {chatsController} from '../../../controllers/ChatsController';
+import {getAvatarUrl} from '../../../utils/chats';
 
 interface AddMemberFormProps extends BlockOwnProps {
     chatId: number;
@@ -101,9 +102,7 @@ export class AddMemberForm extends Block<AddMemberFormProps> {
             const items = users.map((u) => {
                 const item = new UserListItem({
                     id: u.id,
-                    avatarUrl: u.avatar
-                        ? `https://ya-praktikum.tech/api/v2/resources${u.avatar}`
-                        : 'https://placehold.co/200/0088cc/white?text=?',
+                    avatarUrl: getAvatarUrl(u.avatar),
                     name: u.display_name || `${u.first_name} ${u.second_name}`,
                     selectable: true,
                     selected: false,

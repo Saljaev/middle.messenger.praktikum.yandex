@@ -3,6 +3,7 @@ import {Icon} from '../../base/icon/Icon';
 import {Button} from '../../base/button/Button';
 import {UserList} from '../../user/user-list/UserList';
 import {UserListItem} from '../../user/user-list-item/UserListItem';
+import {PLACEHOLDER_AVATAR_URL} from '@api/const';
 
 interface ChatInfoMember {
     id: number;
@@ -16,6 +17,8 @@ interface ChatInfoProps extends BlockOwnProps {
     isAdmin?: boolean;
     onAddMember?: () => void;
     onRemoveMember?: (userId: number) => void;
+    onUpdateAvatar?: (file: File) => void;
+    onDeleteChat?: () => void;
 }
 
 export class ChatInfoContent extends Block<ChatInfoProps> {
@@ -26,11 +29,28 @@ export class ChatInfoContent extends Block<ChatInfoProps> {
             onClick: () => props.onAddMember?.(),
         });
 
+        let deleteButton: Button | undefined;
+        let uploadIcon: Icon | undefined;
+        if (props.isAdmin) {
+            deleteButton = new Button({
+                label: 'Удалить чат',
+                className: 'button_danger',
+                onClick: () => props.onDeleteChat?.(),
+            });
+            uploadIcon = new Icon({name: 'upload'});
+        }
+
         super({
             ...props,
             backIcon: new Icon({name: 'arrow_back'}),
             addButton,
+            deleteButton,
+            uploadIcon,
         });
+
+        this.events = {
+            change: this.handleChange.bind(this),
+        };
     }
 
     public setProps(nextProps: Partial<ChatInfoProps>): void {
@@ -74,6 +94,16 @@ export class ChatInfoContent extends Block<ChatInfoProps> {
         super.setProps(nextProps);
     }
 
+    private handleChange(e: Event): void {
+        const target = e.target as HTMLInputElement;
+        if (target.id === 'chat-avatar') {
+            const file = target.files?.[0];
+            if (file) {
+                this.props.onUpdateAvatar?.(file);
+            }
+        }
+    }
+
     protected template = `
         <div class="chat-info">
             <div class="chat-info__header">
@@ -84,7 +114,18 @@ export class ChatInfoContent extends Block<ChatInfoProps> {
             </div>
             <div class="chat-info__profile">
                 <div class="avatar avatar--xlarge">
-                    <img src="{{chat.avatarUrl}}" alt="{{chat.title}}" class="avatar__image" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" onerror="this.src='https://placehold.co/200/0088cc/white?text=?'">
+                    {{#if isAdmin}}
+                        <label for="chat-avatar" class="avatar-upload__dropzone">
+                            <input type="file" id="chat-avatar" name="chat-avatar" accept="image/*" class="visually-hidden">
+                            <img src="{{chat.avatarUrl}}" alt="{{chat.title}}" class="avatar__image" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" onerror="this.src='${PLACEHOLDER_AVATAR_URL}'">
+                            <div class="avatar-upload__dropzone-overlay">
+                                {{{uploadIcon}}}
+                                <div class="avatar-upload__dropzone-text">Нажмите для загрузки</div>
+                            </div>
+                        </label>
+                    {{else}}
+                        <img src="{{chat.avatarUrl}}" alt="{{chat.title}}" class="avatar__image" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" onerror="this.src='${PLACEHOLDER_AVATAR_URL}'">
+                    {{/if}}
                 </div>
                 <h2 class="chat-info__title">{{chat.title}}</h2>
                 {{#if chat.membersCount}}
@@ -104,6 +145,11 @@ export class ChatInfoContent extends Block<ChatInfoProps> {
                     {{{userList}}}
                 </div>
             </div>
+            {{#if isAdmin}}
+            <div class="chat-info__section chat-info__delete-section">
+                {{{deleteButton}}}
+            </div>
+            {{/if}}
         </div>
     `;
 }

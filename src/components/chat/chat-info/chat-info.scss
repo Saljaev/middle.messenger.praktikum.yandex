@@ -73,6 +73,11 @@
         font-size: $font-size-sm;
     }
 
+    &__delete-section {
+        display: flex;
+        justify-content: center;
+    }
+
     &__members {
         display: flex;
         flex-direction: column;

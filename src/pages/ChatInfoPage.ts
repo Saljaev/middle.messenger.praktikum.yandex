@@ -6,7 +6,8 @@ import {AddMemberForm} from '../components/form/add-member-form/AddMemberForm';
 import ChatList from '../components/chat/chat-list/ChatList';
 import {authController} from '../controllers/AuthController';
 import {chatsController} from '../controllers/ChatsController';
-import {getApiChatById} from '../utils/chats';
+import {getApiChatById, getAvatarUrl} from '../utils/chats';
+import Router from '../router/Router';
 
 interface ChatInfoPageProps extends BlockOwnProps {}
 
@@ -36,9 +37,7 @@ export class ChatInfoPage extends Block<ChatInfoPageProps> {
             chatData = {
                 id: apiChat.id,
                 title: apiChat.title,
-                avatarUrl: apiChat.avatar
-                    ? `https://ya-praktikum.tech/api/v2/resources${apiChat.avatar}`
-                    : 'https://placehold.co/200/0088cc/white?text=?',
+                avatarUrl: getAvatarUrl(apiChat.avatar),
                 status: 'онлайн',
             };
         }
@@ -53,6 +52,20 @@ export class ChatInfoPage extends Block<ChatInfoPageProps> {
             }),
         });
 
+        const refreshChatData = () => {
+            const updatedChat = getApiChatById(chatId);
+            if (updatedChat) {
+                content.setProps({
+                    chat: {
+                        id: updatedChat.id,
+                        title: updatedChat.title,
+                        avatarUrl: getAvatarUrl(updatedChat.avatar),
+                        status: 'онлайн',
+                    },
+                });
+            }
+        };
+
         const content = new ChatInfoContent({
             chat: chatData as unknown as Record<string, unknown>,
             isAdmin,
@@ -65,15 +78,28 @@ export class ChatInfoPage extends Block<ChatInfoPageProps> {
                     loadMembers();
                 }
             },
+            onUpdateAvatar: async (file: File) => {
+                const success = await chatsController.updateChatAvatar(chatId, file);
+                if (success) {
+                    refreshChatData();
+                }
+            },
+            onDeleteChat: async () => {
+                if (!confirm('Вы уверены, что хотите удалить этот чат?')) {
+                    return;
+                }
+                const success = await chatsController.deleteChat(chatId);
+                if (success) {
+                    Router.getInstance().go('/messenger');
+                }
+            },
         });
 
         const loadMembers = async () => {
             const users = await chatsController.getChatUsers(chatId);
             const members = users.map((u) => ({
                 id: u.id,
-                avatarUrl: u.avatar
-                    ? `https://ya-praktikum.tech/api/v2/resources${u.avatar}`
-                    : 'https://placehold.co/200/0088cc/white?text=?',
+                avatarUrl: getAvatarUrl(u.avatar),
                 name: u.display_name || `${u.first_name} ${u.second_name}`,
             }));
             content.setProps({members});

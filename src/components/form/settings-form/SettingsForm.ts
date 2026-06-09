@@ -4,6 +4,7 @@ import {Icon} from '../../base/icon/Icon';
 import {authController} from '../../../controllers/AuthController';
 import Router from '../../../router/Router';
 import {ProfileFormData} from '../../../types';
+import {getAvatarUrl} from '../../../utils/chats';
 import {
     firstNameValidator,
     secondNameValidator,
@@ -11,6 +12,7 @@ import {
     emailValidator,
     phoneValidator,
 } from '../../../utils/validation';
+import {PLACEHOLDER_AVATAR_URL} from '@api/const';
 
 interface SettingsFormProps extends BlockOwnProps {}
 
@@ -21,7 +23,7 @@ export class SettingsForm extends Block<SettingsFormProps> {
                 <h2 class="settings-form__section-title">Личная информация</h2>
                 <div class="settings-profile">
                     <a href="/settings/avatar" class="settings-profile__avatar" title="Нажмите чтобы изменить аватар">
-                        <img src="{{avatarUrl}}" alt="{{firstName}}" class="avatar__image" style="width:64px;height:64px;border-radius:50%;object-fit:cover;" onerror="this.src='https://placehold.co/200/0088cc/white?text=?'">
+                        <img src="{{avatarUrl}}" alt="{{firstName}}" class="avatar__image" style="width:64px;height:64px;border-radius:50%;object-fit:cover;" onerror="this.src='${PLACEHOLDER_AVATAR_URL}'">
                         <div class="settings-profile__avatar-overlay">
                             {{{editAvatarIcon}}}
                         </div>
@@ -108,11 +110,7 @@ export class SettingsForm extends Block<SettingsFormProps> {
 
         super({
             ...props,
-            avatarUrl: String(
-                user.avatar
-                    ? `https://ya-praktikum.tech/api/v2/resources${user.avatar}`
-                    : 'https://placehold.co/200/0088cc/white?text=?',
-            ),
+            avatarUrl: String(getAvatarUrl(user.avatar as string | null)),
             firstName: String(user.first_name ?? ''),
             displayName: String(user.display_name ?? ''),
             firstNameInput,

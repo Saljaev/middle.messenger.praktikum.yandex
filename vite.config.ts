@@ -14,6 +14,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src'),
+            '@api': resolve(__dirname, 'src/api'),
         },
     },
     css: {

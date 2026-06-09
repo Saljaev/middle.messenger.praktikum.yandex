@@ -8,31 +8,35 @@ import {
     UserResponse,
 } from './types';
 
-const chatsAPI = new HTTPTransport('https://ya-praktikum.tech/api/v2/chats');
+const chatsAPI = new HTTPTransport('/chats');
 
 class ChatsAPI extends BaseAPI {
     public getChats(): Promise<ChatResponse[]> {
-        return chatsAPI.get<ChatResponse[]>('/');
+        return chatsAPI.get('/');
     }
 
     public createChat(data: CreateChatRequest): Promise<{id: number}> {
-        return chatsAPI.post<CreateChatRequest, {id: number}>('/', data);
+        return chatsAPI.post('/', {data});
     }
 
     public deleteChat(chatId: number): Promise<void> {
-        return chatsAPI.delete<void>('/', {data: {chatId}});
+        return chatsAPI.delete('/', {data: {chatId}});
     }
 
     public getChatUsers(chatId: number): Promise<UserResponse[]> {
-        return chatsAPI.get<UserResponse[]>(`/${chatId}/users`);
+        return chatsAPI.get(`/${chatId}/users`);
     }
 
     public addUsersToChat(data: AddUsersToChatRequest): Promise<void> {
-        return chatsAPI.put<AddUsersToChatRequest, void>('/users', data);
+        return chatsAPI.put('/users', {data});
     }
 
     public deleteUsersFromChat(data: DeleteUsersFromChatRequest): Promise<void> {
-        return chatsAPI.delete<void>('/users', {data});
+        return chatsAPI.delete('/users', {data});
+    }
+
+    public updateChatAvatar(data: FormData): Promise<ChatResponse> {
+        return chatsAPI.put('/avatar', {data});
     }
 }
 

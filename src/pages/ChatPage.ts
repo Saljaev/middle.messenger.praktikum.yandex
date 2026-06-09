@@ -4,7 +4,7 @@ import {ChatWindow} from '../components/chat/chat-window/ChatWindow';
 import {ChatHeader} from '../components/chat/chat-header/ChatHeader';
 import {MessageForm} from '../components/form/message/MessageForm';
 import ChatList from '../components/chat/chat-list/ChatList';
-import {getActiveChatId, getApiChatById} from '../utils/chats';
+import {getActiveChatId, getApiChatById, getAvatarUrl} from '../utils/chats';
 import Router from '../router/Router';
 import {chatsController} from '../controllers/ChatsController';
 
@@ -26,9 +26,7 @@ export class ChatPage extends Block<ChatPageProps> {
             chatData = {
                 id: apiChat.id,
                 title: apiChat.title,
-                avatarUrl: apiChat.avatar
-                    ? `https://ya-praktikum.tech/api/v2/resources${apiChat.avatar}`
-                    : 'https://placehold.co/200/0088cc/white?text=?',
+                avatarUrl: getAvatarUrl(apiChat.avatar),
                 status: 'онлайн',
                 isGroup: false,
             };

@@ -1,50 +1,39 @@
 import queryStringify from '@/utils/queryString';
+import {API_BASE_URL} from '@api/const';
 
-type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type HTTPMethodName = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 interface HTTPOptions<TData = unknown> {
-    method?: HTTPMethod;
+    method?: HTTPMethodName;
     data?: TData;
     headers?: Record<string, string>;
     timeout?: number;
     responseType?: XMLHttpRequestResponseType;
 }
 
+type HTTPMethod = <R = unknown>(url: string, options?: Omit<HTTPOptions, 'method'>) => Promise<R>;
+
 class HTTPTransport {
     private baseUrl: string;
 
-    constructor(baseUrl: string = '') {
-        this.baseUrl = baseUrl;
+    constructor(path: string = '') {
+        this.baseUrl = path.startsWith('http') ? path : API_BASE_URL + path;
     }
 
-    get = <TResponse>(
-        url: string,
-        options: Omit<HTTPOptions, 'method' | 'data'> & {data?: Record<string, unknown>} = {},
-    ): Promise<TResponse> => {
-        return this.request<TResponse>(url, {...options, method: 'GET'}, options.timeout);
+    get: HTTPMethod = (url, options = {}) => {
+        return this.request(url, {...options, method: 'GET'}, options.timeout);
     };
 
-    post = <TRequest, TResponse>(
-        url: string,
-        data?: TRequest | FormData,
-        options: Omit<HTTPOptions, 'method' | 'data'> = {},
-    ): Promise<TResponse> => {
-        return this.request<TResponse>(url, {...options, method: 'POST', data}, options.timeout);
+    post: HTTPMethod = (url, options = {}) => {
+        return this.request(url, {...options, method: 'POST'}, options.timeout);
     };
 
-    put = <TRequest, TResponse>(
-        url: string,
-        data?: TRequest | FormData,
-        options: Omit<HTTPOptions, 'method' | 'data'> = {},
-    ): Promise<TResponse> => {
-        return this.request<TResponse>(url, {...options, method: 'PUT', data}, options.timeout);
+    put: HTTPMethod = (url, options = {}) => {
+        return this.request(url, {...options, method: 'PUT'}, options.timeout);
     };
 
-    delete = <TResponse>(
-        url: string,
-        options: Omit<HTTPOptions, 'method'> = {},
-    ): Promise<TResponse> => {
-        return this.request<TResponse>(url, {...options, method: 'DELETE'}, options.timeout);
+    delete: HTTPMethod = (url, options = {}) => {
+        return this.request(url, {...options, method: 'DELETE'}, options.timeout);
     };
 
     request = <TResponse>(
@@ -63,7 +52,7 @@ class HTTPTransport {
             const xhr = new XMLHttpRequest();
             const isGet = method === 'GET';
 
-            let fullUrl = this.baseUrl + url;
+            let fullUrl = this.baseUrl.replace(/\/$/, '') + url;
             if (isGet && data && typeof data === 'object' && !(data instanceof FormData)) {
                 const query = queryStringify(data);
                 fullUrl += query ? `?${query}` : '';
