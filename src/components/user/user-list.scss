@@ -1,0 +1,56 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.user-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacer-xs;
+
+    &__empty {
+        font-size: $font-size-base;
+        color: $gray-500;
+        text-align: center;
+        padding: $spacer-md 0;
+    }
+}
+
+.user-list-item {
+    display: flex;
+    align-items: center;
+    gap: $spacer-sm;
+    padding: $spacer-sm;
+    background-color: $bg-secondary;
+    border-radius: $border-radius;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover,
+    &--selected {
+        background-color: $gray-100;
+    }
+
+    &__checkbox {
+        cursor: pointer;
+    }
+
+    &__avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    &__name {
+        font-size: $font-size-base;
+        color: $gray-900;
+        flex: 1;
+    }
+
+    &__remove-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        font-size: 18px;
+    }
+}

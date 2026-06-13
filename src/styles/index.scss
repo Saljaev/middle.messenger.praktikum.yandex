@@ -13,4 +13,7 @@
 @use '../components/chat/chat-info/chat-info';
 @use '../components/chat/message/message';
 @use '../components/chat/message-input/message-input';
+@use '../components/base/modal/modal';
 @use '../components/toast/toast';
+@use '../components/form/add-member-form/add-member-form';
+@use '../components/user/user-list';

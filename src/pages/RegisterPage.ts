@@ -14,7 +14,7 @@ export class RegisterPage extends Block<RegisterPageProps> {
                 <div class="auth-card__footer">
                     <div class="auth-footer">
                         Уже есть аккаунт?
-                        <a href="/login" class="button button_link link">Войти</a>
+                        <a href="/" class="button button_link link">Войти</a>
                     </div>
                 </div>
             </div>

@@ -3,8 +3,9 @@ import {Form} from '../../form/Form';
 import {Input} from '../../base/input/Input';
 import {Button} from '../../base/button/Button';
 import {authController} from '../../../controllers/AuthController';
-import {navigateTo} from '../../../App';
+import Router from '../../../router/Router';
 import {LoginFormData} from '../../../types';
+import {chatsController} from '@/controllers/ChatsController';
 
 interface LoginFormProps extends BlockOwnProps {}
 
@@ -16,11 +17,11 @@ export class LoginForm extends Block<LoginFormProps> {
     constructor(props: LoginFormProps = {}) {
         const form = new Form<LoginFormData>({
             id: 'loginForm',
-            onSubmit: (data) => {
-                console.log(data);
-                const success = authController.signIn(data.login, data.password);
+            onSubmit: async (data) => {
+                const success = await authController.signIn(data.login, data.password);
                 if (success) {
-                    navigateTo('/');
+                    await chatsController.getChats();
+                    Router.getInstance().go('/messenger');
                 }
             },
             children: [

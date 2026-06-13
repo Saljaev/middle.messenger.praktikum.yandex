@@ -55,11 +55,27 @@
         padding: $spacer-md;
     }
 
+    &__section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: $spacer-md;
+    }
+
     &__section-title {
         font-size: $font-size-lg;
         font-weight: 500;
         color: $gray-900;
-        margin-bottom: $spacer-md;
+    }
+
+    &__add-btn {
+        padding: $spacer-xs $spacer-sm;
+        font-size: $font-size-sm;
+    }
+
+    &__delete-section {
+        display: flex;
+        justify-content: center;
     }
 
     &__members {
@@ -68,17 +84,7 @@
         gap: $spacer-sm;
     }
 
-    &__member {
-        display: flex;
-        align-items: center;
-        gap: $spacer-sm;
-        padding: $spacer-sm;
+    .user-list-item {
         background-color: $bg-primary;
-        border-radius: $border-radius;
-    }
-
-    &__member-name {
-        font-size: $font-size-base;
-        color: $gray-900;
     }
 }

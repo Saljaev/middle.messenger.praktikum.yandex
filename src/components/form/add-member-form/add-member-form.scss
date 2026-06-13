@@ -1,0 +1,13 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.add-member-form {
+    min-width: 320px;
+
+    &__title {
+        font-size: $font-size-lg;
+        font-weight: 500;
+        color: $gray-900;
+        margin-bottom: $spacer-md;
+    }
+}

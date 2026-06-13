@@ -3,7 +3,7 @@ import {Form} from '../../form/Form';
 import {Input} from '../../base/input/Input';
 import {Button} from '../../base/button/Button';
 import {authController} from '../../../controllers/AuthController';
-import {navigateTo} from '../../../App';
+import Router from '../../../router/Router';
 import {PasswordFormData} from '../../../types';
 import {passwordValidator} from '../../../utils/validation';
 
@@ -26,15 +26,14 @@ export class SettingsPasswordForm extends Block<SettingsPasswordFormProps> {
                 }
                 return errors;
             },
-            onSubmit: (data) => {
-                console.log(data);
-                const success = authController.updatePassword(
+            onSubmit: async (data) => {
+                const success = await authController.updatePassword(
                     data.old_password,
                     data.new_password,
                     data.new_password_confirm ?? '',
                 );
                 if (success) {
-                    navigateTo('/settings');
+                    Router.getInstance().go('/settings');
                 }
             },
             children: [

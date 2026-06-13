@@ -3,8 +3,9 @@ import {Form} from '../../form/Form';
 import {Icon} from '../../base/icon/Icon';
 import {Button} from '../../base/button/Button';
 import {authController} from '../../../controllers/AuthController';
-import {navigateTo} from '../../../App';
-import {showSuccess} from '../../../utils/notifications';
+import Router from '../../../router/Router';
+import {getAvatarUrl} from '../../../utils/chats';
+import {PLACEHOLDER_AVATAR_URL} from '@api/const';
 
 interface SettingsAvatarFormProps extends BlockOwnProps {}
 
@@ -14,7 +15,7 @@ export class SettingsAvatarForm extends Block<SettingsAvatarFormProps> {
             <div class="avatar-upload__current">
                 <label for="avatar" class="avatar-upload__dropzone" ref="dropzone">
                     <input type="file" id="avatar" name="avatar" accept="image/*" class="visually-hidden" ref="fileInput">
-                    <img src="{{avatarUrl}}" alt="{{firstName}}" class="avatar__image" style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+                    <img src="{{avatarUrl}}" alt="{{firstName}}" class="avatar__image" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" onerror="this.src='${PLACEHOLDER_AVATAR_URL}'">
                     <div class="avatar-upload__dropzone-overlay">
                         {{{uploadIcon}}}
                         <div class="avatar-upload__dropzone-text">Нажмите для загрузки</div>
@@ -30,9 +31,16 @@ export class SettingsAvatarForm extends Block<SettingsAvatarFormProps> {
 
         const form = new Form({
             id: 'avatarUploadForm',
-            onSubmit: () => {
-                showSuccess('Аватар успешно загружен');
-                navigateTo('/settings');
+            onSubmit: async () => {
+                const fileInput = this.refs['fileInput'] as HTMLInputElement | undefined;
+                const file = fileInput?.files?.[0];
+                if (!file) return;
+                const formData = new FormData();
+                formData.append('avatar', file);
+                const success = await authController.updateAvatar(formData);
+                if (success) {
+                    Router.getInstance().go('/settings');
+                }
             },
             children: [
                 new Button({
@@ -45,7 +53,7 @@ export class SettingsAvatarForm extends Block<SettingsAvatarFormProps> {
 
         super({
             ...props,
-            avatarUrl: String(user.avatarUrl ?? 'https://placehold.co/200/0088cc/white?text=?'),
+            avatarUrl: String(getAvatarUrl(user.avatar as string | null)),
             firstName: String(user.first_name ?? ''),
             form,
             uploadIcon: new Icon({name: 'upload'}),
