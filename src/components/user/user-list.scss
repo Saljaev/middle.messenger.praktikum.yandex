@@ -52,5 +52,12 @@
         height: 28px;
         min-width: 28px;
         font-size: 18px;
+        background-color: transparent;
+        color: $gray-500;
+
+        &:hover {
+            color: $gray-900;
+            background-color: transparent;
+        }
     }
 }
