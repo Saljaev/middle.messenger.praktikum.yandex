@@ -46,7 +46,7 @@ export default class Route {
         }
 
         this._block = new this._blockClass();
-        this._block.render();
+        const content = this._block.getContent();
 
         const root = document.querySelector(this._props.rootQuery);
         if (!root) {
@@ -55,7 +55,6 @@ export default class Route {
         }
 
         root.innerHTML = '';
-        const content = this._block.getContent();
         if (content) {
             root.appendChild(content);
             this._block.dispatchComponentDidMount();

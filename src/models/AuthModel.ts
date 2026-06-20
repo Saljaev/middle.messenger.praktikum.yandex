@@ -41,6 +41,10 @@ export class AuthModel extends Model<AuthState> {
                 password: userData.password,
                 phone: userData.phone,
             });
+            await AuthAPI.signIn({
+                login: userData.login,
+                password: userData.password,
+            });
             const user = await AuthAPI.getUser();
             this.setUser(user);
             return true;

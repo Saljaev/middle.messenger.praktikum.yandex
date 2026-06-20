@@ -90,7 +90,6 @@ export class MessageForm extends Block<MessageFormProps> {
             return;
         }
 
-        console.log({message: value});
         if (this.props.onSend) {
             this.props.onSend(value);
         }

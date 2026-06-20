@@ -62,3 +62,36 @@ export interface DeleteUsersFromChatRequest {
 export interface APIError {
     reason: string;
 }
+
+export interface ChatTokenResponse {
+    token: string;
+}
+
+export interface WSMessage {
+    id: string;
+    chat_id?: string;
+    time: string;
+    type: 'message' | 'file' | 'user connected' | 'ping' | 'pong';
+    user_id: string;
+    content: string;
+    file?: WSFile;
+}
+
+export interface WSOldMessage {
+    chat_id: string;
+    time: string;
+    type: 'message' | 'file';
+    user_id: string;
+    content: string;
+    file?: WSFile;
+}
+
+export interface WSFile {
+    id: number;
+    user_id: number;
+    path: string;
+    filename: string;
+    content_type: string;
+    content_size: number;
+    upload_date: string;
+}

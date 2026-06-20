@@ -1,11 +1,13 @@
 import {Model} from '../core/Model';
 import ChatsAPI from '../api/ChatsAPI';
 import store from '../core/Store';
-import {ChatResponse, UserResponse} from '../api/types';
+import {ChatResponse, UserResponse, WSMessage} from '../api/types';
 
 interface ChatsState {
     chats: ChatResponse[];
     activeChatId: number | null;
+    messages: Record<number, WSMessage[]>;
+    chatUsers: Record<number, UserResponse[]>;
     [key: string]: unknown;
 }
 
@@ -14,6 +16,8 @@ export class ChatsModel extends Model<ChatsState> {
         super({
             chats: [],
             activeChatId: null,
+            messages: {},
+            chatUsers: {},
         });
     }
 
@@ -46,6 +50,109 @@ export class ChatsModel extends Model<ChatsState> {
         return (store.getState().activeChatId as number | null) ?? this.state.activeChatId;
     }
 
+    public getMessages(chatId: number): WSMessage[] {
+        return (store.getState().messages as Record<number, WSMessage[]>)?.[chatId] ?? [];
+    }
+
+    public setMessages(chatId: number, messages: WSMessage[]): void {
+        const current = (store.getState().messages as Record<number, WSMessage[]>) ?? {};
+        const updated = {...current, [chatId]: messages};
+        this.setState({messages: updated});
+        store.set('messages', updated);
+    }
+
+    public addMessages(chatId: number, messages: WSMessage[]): void {
+        const current = this.getMessages(chatId);
+        const updated = [...current, ...messages];
+        this.setMessages(chatId, updated);
+    }
+
+    public addMessage(chatId: number, message: WSMessage): void {
+        const current = this.getMessages(chatId);
+        const updated = [message, ...current];
+        this.setMessages(chatId, updated);
+    }
+
+    public updateChatLastMessage(chatId: number, message: WSMessage, user?: UserResponse): void {
+        const chats = this.getChats();
+        const index = chats.findIndex((c) => c.id === chatId);
+        if (index === -1) {
+            return;
+        }
+
+        const chat = chats[index];
+        const prevUser = chat.last_message?.user;
+        const prevUserId = prevUser ? Number(prevUser.id) : null;
+        const msgUserId = Number(message.user_id);
+
+        let lastMessageUser: UserResponse;
+        if (user) {
+            lastMessageUser = user;
+        } else if (prevUser && prevUserId === msgUserId) {
+            lastMessageUser = prevUser;
+        } else {
+            lastMessageUser = {
+                id: msgUserId,
+                first_name: '',
+                second_name: '',
+                display_name: null,
+                login: '',
+                email: '',
+                phone: '',
+                avatar: null,
+            };
+        }
+
+        const updatedChats = [...chats];
+        updatedChats[index] = {
+            ...chat,
+            last_message: {
+                user: lastMessageUser,
+                time: message.time,
+                content: message.content,
+            },
+        };
+        this.setState({chats: updatedChats});
+        store.set('chats', updatedChats);
+    }
+
+    public resetUnreadCount(chatId: number): void {
+        const chats = this.getChats();
+        const index = chats.findIndex((c) => c.id === chatId);
+        if (index === -1) {
+            return;
+        }
+
+        const chat = chats[index];
+        if (chat.unread_count === 0) {
+            return;
+        }
+
+        const updatedChats = [...chats];
+        updatedChats[index] = {...chat, unread_count: 0};
+        this.setState({chats: updatedChats});
+        store.set('chats', updatedChats);
+    }
+
+    public setChatUsers(chatId: number, users: UserResponse[]): void {
+        const current = (store.getState().chatUsers as Record<number, UserResponse[]>) ?? {};
+        const updated = {...current, [chatId]: users};
+        this.setState({chatUsers: updated});
+        store.set('chatUsers', updated);
+    }
+
+    public getChatUsers(chatId: number): UserResponse[] {
+        return (store.getState().chatUsers as Record<number, UserResponse[]>)?.[chatId] ?? [];
+    }
+
+    public clearMessages(chatId: number): void {
+        const current = (store.getState().messages as Record<number, WSMessage[]>) ?? {};
+        const updated = {...current};
+        delete updated[chatId];
+        this.setState({messages: updated});
+        store.set('messages', updated);
+    }
+
     public async createChat(title: string): Promise<void> {
         try {
             await ChatsAPI.createChat({title});
@@ -68,7 +175,7 @@ export class ChatsModel extends Model<ChatsState> {
         }
     }
 
-    public async getChatUsers(chatId: number): Promise<UserResponse[]> {
+    public async fetchChatUsers(chatId: number): Promise<UserResponse[]> {
         try {
             return await ChatsAPI.getChatUsers(chatId);
         } catch (error) {
