@@ -12,12 +12,15 @@ export function showToast(
 
     const toast = document.createElement('div');
     toast.className = `toast toast--${type}`;
-    toast.innerHTML = `
-    <div class="toast__content">
-      <span>${message}</span>
-    </div>
-  `;
 
+    const content = document.createElement('div');
+    content.className = 'toast__content';
+
+    const span = document.createElement('span');
+    span.textContent = message;
+
+    content.appendChild(span);
+    toast.appendChild(content);
     container.appendChild(toast);
 
     setTimeout(() => toast.classList.add('show'), 10);

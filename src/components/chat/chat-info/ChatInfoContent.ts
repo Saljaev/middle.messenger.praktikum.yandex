@@ -70,7 +70,7 @@ export class ChatInfoContent extends Block<ChatInfoProps> {
                 if (isAdmin) {
                     action = new Button({
                         label: '×',
-                        className: 'button_danger button_icon user-list-item__remove-btn',
+                        className: 'button_icon user-list-item__remove-btn',
                         onClick: () => onRemoveMember?.(m.id),
                     });
                 }

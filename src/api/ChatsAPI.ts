@@ -3,6 +3,7 @@ import {BaseAPI} from './BaseAPI';
 import {
     AddUsersToChatRequest,
     ChatResponse,
+    ChatTokenResponse,
     CreateChatRequest,
     DeleteUsersFromChatRequest,
     UserResponse,
@@ -37,6 +38,10 @@ class ChatsAPI extends BaseAPI {
 
     public updateChatAvatar(data: FormData): Promise<ChatResponse> {
         return chatsAPI.put('/avatar', {data});
+    }
+
+    public getToken(chatId: number): Promise<ChatTokenResponse> {
+        return chatsAPI.post(`/token/${chatId}`);
     }
 }
 

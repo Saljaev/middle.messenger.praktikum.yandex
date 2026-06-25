@@ -24,10 +24,15 @@
         "@types/node": "^22.15.17",
         "@typescript-eslint/eslint-plugin": "^8.59.3",
         "@typescript-eslint/parser": "^8.59.3",
+        "chai": "^6.2.2",
         "eslint": "^10.3.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-prettier": "^5.5.5",
         "globals": "^17.6.0",
+        "happy-dom": "^20.10.6",
+        "husky": "^9.1.7",
+        "lint-staged": "^17.0.8",
+        "mocha": "^11.7.6",
         "prettier": "^3.8.3",
         "sass-embedded": "^1.99.0",
         "stylelint": "^17.11.0",
@@ -41,5 +46,14 @@
     "type": "module",
     "dependencies": {
         "handlebars": "^4.7.9"
+    },
+    "lint-staged": {
+        "*.{ts,js}": "eslint --fix",
+        "*.{scss,css}": "stylelint --fix",
+        "*.{ts,js,scss,css,json,md}": "prettier --write"
+    },
+    "overrides": {
+        "diff": "^8.0.4",
+        "serialize-javascript": "^7.0.6"
     }
 }
